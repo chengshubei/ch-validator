@@ -1,0 +1,25 @@
+{
+  "name": "ch-validator",
+  "version": "1.0.0",
+  "description": "powerful validation with ch-koa or koa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chengshubei/ch-validator.git"
+  },
+  "keywords": [
+    "chengshubei"
+  ],
+  "author": "chengshubei",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chengshubei/ch-validator/issues"
+  },
+  "homepage": "https://github.com/chengshubei/ch-validator#readme",
+  "dependencies": {
+    "ch-error": "^1.0.0"
+  }
+}
