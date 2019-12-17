@@ -11,7 +11,7 @@ module.exports = (ctx, ruleObj) => {
         return;
     }
     let lang = ctx.get('lang') || 'zh-CN';
-    let attributes = Object.assign(ctx.params, ctx.request.query, ctx.request.body);
+    let attributes = Object.assign(ctx.request.query, ctx.request.body);
     let ruleMap = ruleObj[ctx.path];
     let params = {};
 

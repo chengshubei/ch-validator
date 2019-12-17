@@ -121,10 +121,8 @@ module.exports = {
         else {
             let key = Object.keys(param)[0];
             if (! this.required(attributes[key])[0]) return [true, null];
-            else {
-                if (Array.isArray(param[key])) if (! this.in(attributes[key], param[key])[0]) return [true, null];
-                else if (attributes[key] != param[key]) return [true, null];
-            }
+            else if (Array.isArray(param[key])) if (! this.in(attributes[key], param[key])[0]) return [true, null];
+            else if (attributes[key] != param[key]) return [true, null];
         }
         return [false, null];
     },

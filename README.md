@@ -1,8 +1,7 @@
 
 # ch-validator
-
-  powerful objects and strings validation, used with koa, and better with ch-koa.
-  支持 数据校验，数据清洗 和 数据过滤的多功能校验器
+    支持 数据校验，数据清洗 和 数据过滤的多功能路由参数校验器。
+    使用需配合Koa2框架, 配合ch-koa框架使用更佳。
 
 ## Installation
 
@@ -57,7 +56,7 @@ app.use((ctx, next) => {
         - in                    必须是数组内元素, 允许数字字符串与数字类型匹配
         - size                  指定字符串长度 或 数组长度
 
-    校验包括ctx.param, ctx.request.query和ctx.request.body中的所有参数。
+    校验包括ctx.request.query和ctx.request.body中的所有参数, 不支持动态路由校验, 不包含ctx.params。
     校验完成并格式化数据, 生成新对象, 挂载在ctx.attributes中, 原始数据不会修改。
     建议在路由校验后的处理中统一使用ctx.attributes, 不再区分请求类型。
 
