@@ -48,10 +48,11 @@ module.exports = (ruleObj = {}) => {
 
     return function (ctx, next) {
         let params = {};
-        if (ruleMap.has(ctx.path)) {
+        let uri = `${ctx.method}_${ctx.path}`;
+        if (ruleMap.has(uri)) {
             let lang = ctx.get('lang') === 'en' ? 'en' : 'zh-CN';
             let attributes = Object.assign(ctx.request.query, ctx.request.body);
-            let keyMap = ruleMap.get(ctx.path);
+            let keyMap = ruleMap.get(uri);
             for (let key in keyMap) {
                 let comment = lang === 'en' ? keyMap[key]['en'] : keyMap[key]['zh_CN'];
                 for (let {rule, option} of keyMap[key]['rules']) {
