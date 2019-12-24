@@ -14,8 +14,8 @@ module.exports = {
         array: '必须是数组格式',
         date: '必须是正确的日期格式',
 
-        max: '值不能大于 ',
-        min: '值不能小于 ',
+        max: '值或长度不能大于 ',
+        min: '值或长度不能小于 ',
         before: '日期太大',
         after: '日期太小',
         decimal: '小数位数不能大于 ',
@@ -37,8 +37,8 @@ module.exports = {
         array: ' must be an array',
         date: ' is not a valid date format',
 
-        max: ' may not be smaller than ',
-        min: ' must be at least ',
+        max: ' value or length must be smaller than ',
+        min: ' value or length must be bigger than ',
         before: 'is too large',
         after: 'is too small',
         decimal: ' decimal digits must be smaller than ',

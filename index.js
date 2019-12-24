@@ -47,28 +47,25 @@ module.exports = (ruleObj = {}) => {
     }
 
     return function (ctx, next) {
-        if (! ruleMap.has(ctx.path)) {
-            ctx.attributes = {};
-            return;
-        }
-
-        let lang = ctx.get('lang') === 'en' ? 'en' : 'zh-CN';
-        let attributes = Object.assign(ctx.request.query, ctx.request.body);
-        let keyMap = ruleMap.get(ctx.path);
         let params = {};
-        for (let key in keyMap) {
-            let comment = lang === 'en' ? keyMap[key]['en'] : keyMap[key]['zh_CN'];
-            for (let {rule, option} of keyMap[key]['rules']) {
-                let result = rules[rule](attributes[key], option, attributes);
-                if (! result[0]) {
-                    let err = `${comment}${language[lang][rule]}`;
-                    if (err.charAt(err.length - 1) === ' ') err += String(option);
-                    throw new ValidateError(err);
-                } else if (result[1] !== null) {
-                    params[key] = result[1];
+        if (ruleMap.has(ctx.path)) {
+            let lang = ctx.get('lang') === 'en' ? 'en' : 'zh-CN';
+            let attributes = Object.assign(ctx.request.query, ctx.request.body);
+            let keyMap = ruleMap.get(ctx.path);
+            for (let key in keyMap) {
+                let comment = lang === 'en' ? keyMap[key]['en'] : keyMap[key]['zh_CN'];
+                for (let {rule, option} of keyMap[key]['rules']) {
+                    let result = rules[rule](attributes[key], option, attributes);
+                    if (! result[0]) {
+                        let err = `${comment}${language[lang][rule]}`;
+                        if (err.charAt(err.length - 1) === ' ') err += String(option);
+                        throw new ValidateError(err);
+                    } else if (result[1] !== null) {
+                        params[key] = result[1];
+                    }
                 }
             }
-        }
+        }        
         ctx.attributes = params;
         return next();
     };
