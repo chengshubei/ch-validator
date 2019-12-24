@@ -48,7 +48,7 @@ module.exports = (ruleObj = {}) => {
 
     return function (ctx, next) {
         let params = {};
-        let uri = `${ctx.method}_${ctx.path}`;
+        let uri = `${ctx.method.toLowerCase()}_${ctx.path}`;
         if (ruleMap.has(uri)) {
             let lang = ctx.get('lang') === 'en' ? 'en' : 'zh-CN';
             let attributes = Object.assign(ctx.request.query, ctx.request.body);
