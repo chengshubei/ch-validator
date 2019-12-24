@@ -1,6 +1,6 @@
 
 # ch-validator
-    支持 数据校验，数据清洗 和 数据过滤的多功能路由参数校验器。
+    支持数据校验,清洗,过滤,汇总的多功能路由参数校验器。
     使用需配合Koa2框架, 配合ch-koa框架使用更佳。
 
 ## Installation
@@ -16,24 +16,26 @@ $ npm install ch-validator
 
 ```js
 const Koa = require('koa');
+const validate = require('ch-validator');
 const app = new Koa(config);
 const validators = {
     '/user/info': {
         'id': ['用户编号', 'required', 'integer', {'min': 1000}],
-        'school': [{'zh-CN': '学校名称', 'en': 'school'}, 'string', {'default': '杭州市学军中学'}]
+        'school': ['学校名称', 'string', {'default': '杭州市学军中学'}]
     }
-}
-app.use((ctx, next) => {
-    validate(ctx, validators);
-    return next();
-});
+};
+app.use(validate(validators));
 ```
 
-## Basic Usage
+## 使用说明
     如上举例..
-    该模块配合koa使用2, 最好配合ch-koa使用, 只用于检测路由参数。
-    参数规则数组第一个元素必须为 参数名称 或参数名称对象(对应多语言), 用于参数检测不通过时的报错信息。
-    支持常用的规则:
+    该模块配合koa2使用, 用于路由参数的校验,清洗,过滤,汇总。
+    模块需要传入路由校验对象。{path: {param: [name, ...validators]}}
+    ***特别注意: 参数校验规则列表的第一个元素，必须为参数名，用于检测不通过时的中文提示信息***
+    因为参数校验在c端理应先行校验，在生产环境不通过的概率较小，本模块验证不通过的提示只支持中文和英文。
+    根据ctx.get('lang')得到的国际化标识, 没有或为zh_CN则提示中文, 否则提示英文, 英文参数名为字段key本身。
+    
+    ch-validator支持常用的规则如下:
         - require               必须存在
         - require_with          如果某个参数存在, 则必须存在
         - require_if            满足条件, 则必须存在
@@ -56,11 +58,11 @@ app.use((ctx, next) => {
         - in                    必须是数组内元素, 允许数字字符串与数字类型匹配
         - size                  指定字符串长度 或 数组长度
 
-    校验包括ctx.request.query和ctx.request.body中的所有参数, 不支持动态路由校验, 不包含ctx.params。
+    校验包括ctx.request.query和ctx.request.body中的所有参数, 不支持动态路由校验(不校验ctx.params)。
     校验完成并格式化数据, 生成新对象, 挂载在ctx.attributes中, 原始数据不会修改。
-    建议在路由校验后的处理中统一使用ctx.attributes, 不再区分请求类型。
+    ***建议在路由校验后的处理中统一使用ctx.attributes, 不再区分请求类型。***
 
-    校验失败抛出的错误, 依赖于ch-koa模块中定义的错误类型。
+    校验失败抛出的错误, 依赖于ch-error模块中定义的ValidateError错误类型。
 
 # License
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const {SystemError} = require('ch-error');
+const assert = require('assert');
 
 module.exports = {
     required: function(v) {
@@ -58,31 +58,31 @@ module.exports = {
     },
 
     max: function(v, param) {
-        if (isNaN(param)) throw new SystemError('max检测器参数错误: ' + String(param));
+        assert(Number(param) > 0, 'max检测器参数必须是正整数: ' + String(param));
         if (typeof v === 'string') return [v.length <= param, v];
         if (typeof v === 'number') return [v <= param, v];
     },
 
     min: function(v, param) {
-        if (isNaN(param)) throw new SystemError('min检测器参数错误: ' + String(param));
+        assert(Number(param) > 0, 'min检测器参数必须是正整数: ' + String(param));
         if (typeof v === 'string') return [v.length >= param, v];
         if (typeof v === 'number') return [v >= param, v];
     },
 
     before: function(v, param) {
-        if (! this.date(param)[0]) throw new SystemError('before检测器参数错误: ' + String(param));
+        assert(this.date(param)[0], 'before检测器参数必须是日期字符串或时间戳: ' + String(param));
         if (! this.date(v)[0]) return [false, null];
         return [new Date(param).getTime() > new Date(v).getTime(), v];
     },
     
     after: function(v, param) {
-        if (! this.date(param)[0]) throw new SystemError('after检测器参数错误: ' + String(param));
+        assert(this.date(param)[0], 'after检测器参数必须是日期字符串或时间戳: ' + String(param));
         if (! this.date(v)[0]) return [false, null];
         return [new Date(param).getTime() < new Date(v).getTime(), v];
     },
 
     decimal: function(v, param) {
-        if (isNaN(param)) throw new SystemError('decimal检测器参数错误: ' + String(param));
+        assert(Number(param) > 0, 'decimal检测器参数必须是正整数: ' + String(param));
         if (isNaN(v)) return [false, null];
         let tmp = String(v).split('.');
         if (tmp.length === 2 && tmp[1].length > param) return [false, null];
@@ -90,16 +90,16 @@ module.exports = {
     },
 
     in: function(v, param) {
-        if (! Array.isArray(param)) throw new SystemError('in验证器参数错误: ' + typeof param);
+        assert(Array.isArray(param), 'in验证器参数必须是数组: ' + typeof param);
         for (let i of param) {
-            if (typeof i === 'object') throw new SystemError('in验证器元素类型不允许: ' + typeof i);
+            assert(typeof i !== 'object', 'in验证器元素类型只能是字符串或数字');
             if (String(v) === String(i)) return [true, i];
         }
         return [false, null];
     },
 
     size: function(v, param) {
-        if (isNaN(param)) throw new SystemError('size检测器参数错误: ' + String(param));
+        assert(Number(param) > 0, 'size检测器参数必须是正整数: ' + String(param));
         if (Array.isArray(v)) return [v.length == param, v];
         return [String(v).length == param, String(v)];
     },
