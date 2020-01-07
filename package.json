@@ -1,6 +1,6 @@
 {
   "name": "ch-validator",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "功能强大的Koa路由参数校验,过滤和格式化中间件",
   "main": "index.js",
   "scripts": {
