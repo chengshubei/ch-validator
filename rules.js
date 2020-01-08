@@ -53,8 +53,8 @@ module.exports = {
     },
     
     date: function(v) {
-        if (! isNaN(v)) v = String(v).length === 10 ? Number(v) * 1000 : Number(v);
-        return [String(new Date(v)) !== 'Invalid Date', v];
+        if (isNaN(v)) return [String(new Date(v)) !== 'Invalid Date', v];
+        else return [true, Number(v)];
     },
 
     max: function(v, param) {
