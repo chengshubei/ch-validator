@@ -58,13 +58,13 @@ module.exports = {
     },
 
     max: function(v, param) {
-        assert(Number(param) > 0, 'max检测器参数必须是正整数: ' + String(param));
+        assert(! isNaN(param), 'max检测器参数必须是数字: ' + String(param));
         if (typeof v === 'string') return [v.length <= param, v];
         if (typeof v === 'number') return [v <= param, v];
     },
 
     min: function(v, param) {
-        assert(Number(param) > 0, 'min检测器参数必须是正整数: ' + String(param));
+        assert(! isNaN(param), 'min检测器参数必须是数字: ' + String(param));
         if (typeof v === 'string') return [v.length >= param, v];
         if (typeof v === 'number') return [v >= param, v];
     },
@@ -82,7 +82,7 @@ module.exports = {
     },
 
     decimal: function(v, param) {
-        assert(Number(param) > 0, 'decimal检测器参数必须是正整数: ' + String(param));
+        assert(Number(param) > 0, 'decimal检测器参数必须是正数: ' + String(param));
         if (isNaN(v)) return [false, null];
         let tmp = String(v).split('.');
         if (tmp.length === 2 && tmp[1].length > param) return [false, null];
@@ -99,7 +99,7 @@ module.exports = {
     },
 
     size: function(v, param) {
-        assert(Number(param) > 0, 'size检测器参数必须是正整数: ' + String(param));
+        assert(! isNaN(param), 'size检测器参数必须是数字: ' + String(param));
         if (Array.isArray(v)) return [v.length == param, v];
         return [String(v).length == param, String(v)];
     },
