@@ -12,7 +12,9 @@ $ npm install ch-validator
 
 ## Example For Koa2
 
-```js
+<font size=2>
+
+```
 const Koa = require('koa');
 const validate = require('ch-validator');
 const app = new Koa(config);
@@ -39,6 +41,7 @@ app.use(validate(validators));
 
 ## 使用说明
 
+<font size=3>
 (请忽略1.2.0之前版本内容, 模块初建修改较大, 1.2.0为第一个稳定版本, 之后版本为正常迭代, 保证质量和兼容性) 
 
 **该模块若配合koa2使用, 请务必在前置中间件中包含异常处理, 验证不通过会抛出Error。**  
@@ -48,6 +51,8 @@ app.use(validate(validators));
 根据ctx.get('lang')得到的国际化标识, 没有或为zh_CN则提示中文, 否则提示英文, 英文参数名为字段key本身。
 
 ## 支持的常用规则:  
+
+<font size=2>
 
 名词 | 规则 | 示例
 -|-|-|
@@ -73,6 +78,8 @@ min | 数字最小值或字符串最小长度 | {age: ['年龄', 'integer', {min
 size | 字符串长度或数组元素数量必须是指定值 | {code: ['验证码', 'string', {size: 6}]}
 in | 必须是数组内的元素,允许数字字符串和数字类型匹配 | {level: ['等级', {in: [3, '4', 5]}]}
 decimal | 指定最大小数位数,允许数字字符串,强制转为数字 | {score: ['分数', {decimal: 2}]}
+
+</font>
 
 校验包括ctx.request.query和ctx.request.body中的所有参数, 不支持动态路由校验(不校验ctx.params)。  
 校验完成并格式化数据, 生成新对象, 挂载在ctx.attributes中, 原始数据不会修改。  
