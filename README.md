@@ -48,27 +48,31 @@ app.use(validate(validators));
 根据ctx.get('lang')得到的国际化标识, 没有或为zh_CN则提示中文, 否则提示英文, 英文参数名为字段key本身。
 
 ## 支持的常用规则:  
-    - require               必须存在  
-    - require_with          如果某个参数存在, 则必须存在  
-    - require_if            满足条件, 则必须存在  
-    - required_unless       除非满足某个条件, 否则必须存在  
-    - default               如果参数不存在，给予默认值  
-    - string                字符串, 允许任意值，将强制转化为字符串  
-    - number                数字, 允许数字字符串，将强制转化为数字  
-    - integer               整数, 允许数字字符串，将强制转化为数字  
-    - mobile                手机号, 建议带参数"area"使用  
-    - uuidv1                v1版本UUID  
-    - email                 邮箱  
-    - url                   链接  
-    - array                 数组  
-    - date                  日期, 支持时间字符串和10,13位时间戳   
-    - before                必须早于指定时间戳或时间字符串  
-    - after                 必须晚于指定时间戳或时间字符串  
-    - max                   数字类型最大值 或 字符串类型最大长度  
-    - min                   数字类型最小值 或 字符串类型最小长度  
-    - decimal               指定最大小数位数, 允许数字字符串，将强制转化为数字  
-    - in                    必须是数组内元素, 允许数字字符串与数字类型匹配  
-    - size                  指定字符串长度 或 数组长度  
+
+名词 | 规则 | 示例
+-|-|-|
+required | 不能为空 | {uid: ['用户编号', 'required']} 
+required_with | 如果某个参数存在,则不能为空 | {area: ['手机区号', {required_with: 'mobile'}]}
+required_unless | 除非某个参数存在,否则不能为空 | {mobile: ['手机号', {required_unless: 'email'}]}
+required_if | 如果某个参数等于指定值或是列表中的值,则不能为空 | {age: ['年龄', {required_if: {group: 'children'}}, {required_if: {level: [1, 2]}}]}
+required_ifnot | 如果某个参数不等于指定值或列表中的值,则不能为空 | {mobile: ['手机号', {required_ifnot: {type: 'email'}}]}
+default | 如果为空时,给予默认值 | {sex: ['性别', {default: 'man'}]}
+string | 字符串(允许任意类型,强制转为字符串) | {address: ['地址', 'string']}
+number | 数字(允许数字字符串,强制转为数字) | {score: ['分数', 'number']}
+integer | 整数(允许整数字符串,强制转为整数) | {age: ['年龄', 'number']}
+mobile | 手机号(建议带上'area'参数使用) | {mobile: ['手机号', 'mobile']}
+email | 邮箱地址 | {email: ['邮箱地址', 'email']}
+uuid | UUID格式(不区分v1,v4等版本) | {id: ['订单编号', 'uuid']}
+url | 链接地址 | {download_url: ['下载地址', 'url']}
+array | 数组 | {partners: ['同伴们', 'array']}
+date | 日期(支持时间字符串和10,13位时间戳) | {addtime: ['注册时间', 'date']}
+before | 必须早于指定时间字符串或10,13位时间戳 | {addtime: ['注册时间', 'date', {before: 1581955465}]}
+after | 必须晚于指定时间字符串或10,13位时间戳 | {addtime: ['注册时间', 'date', {after: 1581955465}]}
+max | 数字最大值或字符串最大长度 | {address: ['住址', 'string', {max: 50}]}
+min | 数字最小值或字符串最小长度 | {age: ['年龄', 'integer', {min: 18}]}
+size | 字符串长度或数组元素数量必须是指定值 | {code: ['验证码', 'string', {size: 6}]}
+in | 必须是数组内的元素,允许数字字符串和数字类型匹配 | {level: ['等级', {in: [3, '4', 5]}]}
+decimal | 指定最大小数位数,允许数字字符串,强制转为数字 | {score: ['分数', {decimal: 2}]}
 
 校验包括ctx.request.query和ctx.request.body中的所有参数, 不支持动态路由校验(不校验ctx.params)。  
 校验完成并格式化数据, 生成新对象, 挂载在ctx.attributes中, 原始数据不会修改。  

@@ -7,7 +7,7 @@ module.exports = {
         if (v === undefined || v === null) return [false, null];
         let str = String(v).replace(/\s/g, '');
         if (str.length > 0) return [true, v];
-        else return [false, null];
+        return [false, null];
     },
 
     string: function(v) {
@@ -16,25 +16,25 @@ module.exports = {
 
     numeric: function(v) {
         if (isNaN(v)) return [false, null];
-        else return [true, Number(v)];
+        return [true, Number(v)];
     },
 
     integer: function(v) {
         if (isNaN(v) || (v % 1 !== 0)) return [false, null];
-        else return [true, Number(v)];
+        return [true, Number(v)];
     },
 
     mobile: function(v, param, attributes) {
         if (isNaN(v)) return [false, null];
-        if (attributes['area'] === '86' || ! attributes['area']) {
+        if (! attributes['area'] || ['86', '+86'].includes(String(attributes['area']))) {
             let pattern = /^1(3|4|5|6|7|8|9)\d{9}$/;
             return [pattern.test(String(v)), String(v)];
         }
         return [String(v).length > 3, String(v)];
     },
 
-    uuidv1: function(v) {
-        let pattern = /^[0-9A-F]{8}-[0-9A-F]{4}-1[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
+    uuid: function(v) {
+        let pattern = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
         return [pattern.test(String(v)), v];
     },
 
@@ -54,19 +54,21 @@ module.exports = {
     
     date: function(v) {
         if (isNaN(v)) return [String(new Date(v)) !== 'Invalid Date', v];
-        else return [true, Number(v)];
+        return [true, Number(v)];
     },
 
     max: function(v, param) {
         assert(! isNaN(param), 'max检测器参数必须是数字: ' + String(param));
         if (typeof v === 'string') return [v.length <= param, v];
         if (typeof v === 'number') return [v <= param, v];
+        return [false, null];
     },
 
     min: function(v, param) {
         assert(! isNaN(param), 'min检测器参数必须是数字: ' + String(param));
         if (typeof v === 'string') return [v.length >= param, v];
         if (typeof v === 'number') return [v >= param, v];
+        return [false, null];
     },
 
     before: function(v, param) {
@@ -86,7 +88,7 @@ module.exports = {
         if (isNaN(v)) return [false, null];
         let tmp = String(v).split('.');
         if (tmp.length === 2 && tmp[1].length > param) return [false, null];
-        else return [true, Number(v)];
+        return [true, Number(v)];
     },
 
     in: function(v, param) {
@@ -106,29 +108,35 @@ module.exports = {
 
     required_with: function(v, param, attributes) {
         if (this.required(v)[0]) return [true, v];
-        else if (this.required(attributes[param])[0]) return [false, null];
-        else return [true, null];
+        if (this.required(attributes[param])[0]) return [false, null];
+        return [true, null];
     },
-
+    
     required_unless: function(v, param, attributes) {
         if (this.required(v)[0]) return [true, v];
-        else if (! this.required(attributes[param])[0]) return [false, null];
-        else return [true, null];
+        if (! this.required(attributes[param])[0]) return [false, null];
+        return [true, null];
     },
 
     required_if: function(v, param, attributes) {
         if (this.required(v)[0]) return [true, v];
-        else {
-            let key = Object.keys(param)[0];
-            if (! this.required(attributes[key])[0]) return [true, null];
-            else if (Array.isArray(param[key])) if (! this.in(attributes[key], param[key])[0]) return [true, null];
-            else if (attributes[key] != param[key]) return [true, null];
-        }
+        let key = Object.keys(param)[0];
+        if (! this.required(attributes[key])[0]) return [true, null];
+        if (attributes[key] == param[key]) return [false, null];
+        if (Array.isArray(param[key]) && this.in(attributes[key], param[key])[0]) return [false, null];
+        return [true, null];
+    },
+
+    required_ifnot: function(v, param, attributes) {
+        if (this.required(v)[0]) return [true, v];
+        let key = Object.keys(param)[0];
+        if (attributes[key] == param[key]) return [true, null];
+        if (Array.isArray(param[key]) && this.in(attributes[key], param[key])[0]) return [true, null];
         return [false, null];
     },
 
     default: function(v, param) {
         if (this.required(v)[0]) return [true, v];
-        else return [true, param];
+        return [true, param];
     }
 };
